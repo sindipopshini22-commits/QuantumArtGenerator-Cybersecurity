@@ -1,5 +1,5 @@
 import { ArtworkInterpretationInput, ArtworkInterpretationResult, ComprehensiveReportInput, ComprehensiveReportResult, FingerprintInput, FingerprintReport, SecurityAuditInput, SecurityAuditResult } from "../../models/types";
-import { OpenAIClient, ChatMessage } from "../../infra/openaiClient";
+import { GroqClient, ChatMessage } from "../../infra/groqClient";
 
 export interface AnalysisResult {
   entropyAssessment: string;
@@ -13,10 +13,10 @@ export interface AnalysisResult {
 }
 
 export class AIService {
-  private client: OpenAIClient;
+  private client: GroqClient;
 
-  constructor(client?: OpenAIClient) {
-    this.client = client ?? new OpenAIClient();
+  constructor(client?: GroqClient) {
+    this.client = client ?? new GroqClient();
   }
 
   private buildMessages(input: FingerprintInput): ChatMessage[] {
