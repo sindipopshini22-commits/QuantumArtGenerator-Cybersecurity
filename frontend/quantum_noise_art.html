@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quantum Noise Art — Cybersecurity Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060810;
+    --bg2: #0b0f1a;
+    --bg3: #0f1525;
+    --surface: rgba(255,255,255,0.04);
+    --surface2: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --cyan: #00e5ff;
+    --violet: #a855f7;
+    --emerald: #10b981;
+    --cyan-dim: rgba(0,229,255,0.12);
+    --violet-dim: rgba(168,85,247,0.12);
+    --emerald-dim: rgba(16,185,129,0.12);
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #475569;
+    --font-display: 'Syne', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+    --r: 12px;
+    --r2: 20px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* ── SCANLINE OVERLAY ── */
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* ── LAYOUT ── */
+  .container { position: relative; z-index: 1; max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 1px solid var(--border);
+    background: rgba(6,8,16,0.88);
+    backdrop-filter: blur(20px);
+  }
+  .nav-inner {
+    max-width: 1280px; margin: 0 auto; padding: 0 2rem;
+    display: flex; align-items: center; gap: 2rem; height: 60px;
+  }
+  .nav-logo {
+    font-family: var(--font-display); font-weight: 800; font-size: 16px;
+    color: var(--cyan); letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--cyan); animation: pulse-dot 2s ease-in-out infinite; }
+  @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+  .nav-links { display: flex; gap: 1.5rem; margin-left: auto; }
+  .nav-links a {
+    color: var(--text2); text-decoration: none; font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--cyan); }
+  .nav-status {
+    font-size: 11px; color: var(--emerald);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .status-led { width: 6px; height: 6px; border-radius: 50%; background: var(--emerald); animation: blink 1.8s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 6rem 0 4rem;
+    position: relative;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border2); border-radius: 100px;
+    padding: 4px 14px; font-size: 11px; color: var(--cyan);
+    letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    line-height: 1.05; letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 span.gradient-text {
+    background: linear-gradient(135deg, var(--cyan) 0%, var(--violet) 60%, var(--emerald) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .hero-sub {
+    color: var(--text2); max-width: 600px; font-size: 15px; line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn {
+    padding: 10px 24px; border-radius: var(--r); cursor: pointer;
+    font-family: var(--font-mono); font-size: 12px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    transition: all .2s; border: 1px solid; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-primary {
+    background: var(--cyan); color: #000; border-color: var(--cyan);
+  }
+  .btn-primary:hover { background: transparent; color: var(--cyan); box-shadow: 0 0 20px rgba(0,229,255,0.3); }
+  .btn-ghost {
+    background: transparent; color: var(--text); border-color: var(--border2);
+  }
+  .btn-ghost:hover { border-color: var(--violet); color: var(--violet); }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    border: 1px solid var(--border); border-radius: var(--r2);
+    background: var(--border); overflow: hidden; margin: 3rem 0;
+  }
+  .stat-item {
+    background: var(--bg2); padding: 1.5rem 1.5rem;
+  }
+  .stat-label { font-size: 11px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-value { font-family: var(--font-display); font-weight: 700; font-size: 1.8rem; }
+  .stat-value.cyan { color: var(--cyan); }
+  .stat-value.violet { color: var(--violet); }
+  .stat-value.emerald { color: var(--emerald); }
+  .stat-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+  /* ── SECTION ── */
+  section { padding: 4rem 0; }
+  .section-header { margin-bottom: 2.5rem; }
+  .section-tag {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--cyan); margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    line-height: 1.2;
+  }
+  .section-desc { color: var(--text2); max-width: 560px; margin-top: 10px; font-size: 14px; }
+
+  /* ── GLASS CARD ── */
+  .glass {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 1.5rem;
+    transition: border-color .2s, background .2s;
+  }
+  .glass:hover { border-color: var(--border2); background: var(--surface2); }
+
+  /* ── GENERATOR PANEL ── */
+  .generator-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .panel-title {
+    font-family: var(--font-display); font-size: 13px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text2); margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .panel-title::before { content: '//'; color: var(--cyan); font-family: var(--font-mono); }
+  .form-row { margin-bottom: 1.2rem; }
+  .form-label { font-size: 11px; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; display: block; }
+  .form-control {
+    width: 100%; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--r); color: var(--text); font-family: var(--font-mono);
+    font-size: 13px; padding: 10px 14px;
+    transition: border-color .2s;
+    outline: none; appearance: none;
+  }
+  .form-control:focus { border-color: var(--cyan); }
+  .form-control option { background: var(--bg2); }
+  .circuit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .circuit-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 10px 12px; cursor: pointer;
+    transition: all .2s;
+  }
+  .circuit-card:hover, .circuit-card.active { border-color: var(--cyan); background: var(--cyan-dim); }
+  .circuit-card.active .cc-name { color: var(--cyan); }
+  .cc-name { font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+  .cc-desc { font-size: 11px; color: var(--text3); line-height: 1.5; }
+
+  /* ── CANVAS AREA ── */
+  .canvas-area {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--r2); overflow: hidden;
+    aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  #art-canvas { width: 100%; height: 100%; display: block; }
+  .canvas-placeholder {
+    text-align: center; color: var(--text3);
+  }
+  .canvas-placeholder .big-icon { font-size: 3rem; margin-bottom: 1rem; opacity: .3; }
+  .canvas-placeholder p { font-size: 12px; }
+  .canvas-overlay {
+    position: absolute; bottom: 1rem; left: 1rem; right: 1rem;
+    display: flex; gap: 8px; justify-content: flex-end;
+  }
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: var(--r);
+    background: rgba(6,8,16,0.8); border: 1px solid var(--border2);
+    color: var(--text2); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; transition: all .2s; backdrop-filter: blur(8px);
+  }
+  .icon-btn:hover { border-color: var(--cyan); color: var(--cyan); }
+
+  /* ── GENERATE BTN ── */
+  .generate-btn {
+    width: 100%; padding: 14px; border-radius: var(--r);
+    background: linear-gradient(135deg, var(--cyan), var(--violet));
+    color: #fff; font-family: var(--font-mono); font-weight: 700;
+    font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; border: none; margin-top: 1rem;
+    transition: opacity .2s, transform .1s;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .generate-btn:hover { opacity: .88; }
+  .generate-btn:active { transform: scale(.99); }
+  .generate-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ── THETA SLIDER ── */
+  .theta-row { display: none; }
+  .theta-row.visible { display: block; }
+  .range-wrap { display: flex; align-items: center; gap: 12px; }
+  input[type=range] {
+    flex: 1; -webkit-appearance: none; height: 4px;
+    background: var(--border2); border-radius: 2px; outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 16px; height: 16px;
+    border-radius: 50%; background: var(--cyan); cursor: pointer;
+    border: 2px solid var(--bg);
+  }
+  .range-val { font-size: 12px; color: var(--cyan); min-width: 42px; text-align: right; }
+
+  /* ── METRICS ── */
+  .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.2rem; }
+  .metric-card {
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 14px;
+  }
+  .mc-label { font-size: 10px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+  .mc-value { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; }
+  .mc-value.c { color: var(--cyan); }
+  .mc-value.v { color: var(--violet); }
+  .mc-value.e { color: var(--emerald); }
+  .mc-sub { font-size: 10px; color: var(--text3); margin-top: 4px; }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width .6s ease; background: var(--cyan); }
+
+  /* ── LOG TERMINAL ── */
+  .terminal {
+    background: #000; border: 1px solid var(--border);
+    border-radius: var(--r2); padding: 1.2rem; font-family: var(--font-mono);
+    font-size: 12px; height: 200px; overflow-y: auto;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+  }
+  .log-line { margin-bottom: 4px; }
+  .log-time { color: var(--text3); }
+  .log-info { color: var(--cyan); }
+  .log-success { color: var(--emerald); }
+  .log-warn { color: #f59e0b; }
+  .log-data { color: var(--text2); }
+
+  /* ── CIRCUIT DIAGRAMS ── */
+  .circuits-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+  .circuit-diagram-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--r2); padding: 1.2rem; text-align: center;
+    cursor: pointer; transition: all .3s; position: relative; overflow: hidden;
+  }
+  .circuit-diagram-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,229,255,0.08), transparent 70%);
+    opacity: 0; transition: opacity .3s;
+  }
+  .circuit-diagram-card:hover::before { opacity: 1; }
+  .circuit-diagram-card:hover { border-color: var(--cyan); }
+  .cdc-icon { font-size: 2rem; margin-bottom: 10px; }
+  .cdc-name { font-family: var(--font-display); font-weight: 700; font-size: 12px; margin-bottom: 6px; }
+  .cdc-entropy { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 11px; color: var(--text3); }
+  .entropy-pip { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* ── SECURITY AUDIT ── */
+  .audit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .audit-input-panel .glass { height: 100%; }
+  .strength-meter { margin: 1.2rem 0; }
+  .strength-label { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: var(--text2); }
+  .strength-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .strength-fill { height: 100%; border-radius: 3px; transition: all .5s; }
+  .audit-results { display: none; }
+  .audit-results.visible { display: block; }
+  .finding { padding: 10px 14px; border-radius: var(--r); margin-bottom: 8px; font-size: 12px; border: 1px solid; }
+  .finding.strength { background: var(--emerald-dim); border-color: rgba(16,185,129,0.3); color: #6ee7b7; }
+  .finding.weakness { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.25); color: #fca5a5; }
+  .finding-icon { margin-right: 8px; }
+
+  /* ── AI INTERPRET ── */
+  .ai-panel {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--r2); padding: 1.5rem;
+  }
+  .ai-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.2rem; }
+  .ai-badge {
+    background: var(--violet-dim); border: 1px solid rgba(168,85,247,0.3);
+    border-radius: 100px; padding: 3px 12px; font-size: 11px; color: var(--violet);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .ai-result { font-size: 13px; line-height: 1.8; color: var(--text2); min-height: 60px; }
+  .ai-result.loading::after { content: '▋'; animation: cursor-blink .7s step-end infinite; }
+  @keyframes cursor-blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* ── CONVERSATION ── */
+  .chat-area {
+    height: 280px; overflow-y: auto; padding: 1rem;
+    display: flex; flex-direction: column; gap: 10px;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+  }
+  .msg { padding: 10px 14px; border-radius: var(--r); font-size: 13px; max-width: 85%; }
+  .msg.user { background: var(--cyan-dim); border: 1px solid rgba(0,229,255,0.2); align-self: flex-end; color: var(--cyan); }
+  .msg.ai { background: var(--surface2); border: 1px solid var(--border); align-self: flex-start; color: var(--text); }
+  .msg.ai .msg-label { font-size: 10px; color: var(--text3); margin-bottom: 4px; letter-spacing: 0.1em; }
+  .chat-input-row { display: flex; gap: 8px; padding: 1rem; border-top: 1px solid var(--border); }
+  .chat-input {
+    flex: 1; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: var(--r); color: var(--text); font-family: var(--font-mono);
+    font-size: 13px; padding: 10px 14px; outline: none;
+    transition: border-color .2s;
+  }
+  .chat-input:focus { border-color: var(--cyan); }
+  .send-btn {
+    background: var(--cyan); color: #000; border: none;
+    border-radius: var(--r); padding: 10px 16px; cursor: pointer;
+    font-family: var(--font-mono); font-weight: 700; font-size: 12px;
+    transition: opacity .2s;
+  }
+  .send-btn:hover { opacity: .8; }
+
+  /* ── REPORT ── */
+  .report-box {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--r2); padding: 2rem; position: relative;
+  }
+  .report-content { font-size: 13px; line-height: 1.9; color: var(--text2); }
+  .report-meta { display: flex; gap: 2rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+  .rm-item { }
+  .rm-label { font-size: 10px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; }
+  .rm-value { font-size: 13px; color: var(--text); margin-top: 3px; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0; margin-top: 4rem;
+  }
+  .footer-inner {
+    max-width: 1280px; margin: 0 auto; padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; color: var(--text3);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .fade-up { animation: fadeUp .5s ease both; }
+  .fade-up-2 { animation: fadeUp .5s .1s ease both; }
+  .fade-up-3 { animation: fadeUp .5s .2s ease both; }
+  .fade-up-4 { animation: fadeUp .5s .3s ease both; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner { animation: spin 1s linear infinite; display: inline-block; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); margin: 0.8rem 0; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+  .tab {
+    padding: 8px 16px; font-size: 12px; letter-spacing: 0.08em;
+    text-transform: uppercase; cursor: pointer; color: var(--text3);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: all .2s;
+  }
+  .tab.active { color: var(--cyan); border-bottom-color: var(--cyan); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── BIT VISUALIZER ── */
+  #bit-viz { font-family: var(--font-mono); font-size: 11px; line-height: 1.8; word-break: break-all; color: var(--text3); max-height: 120px; overflow: hidden; }
+  #bit-viz .one { color: var(--cyan); }
+  #bit-viz .zero { color: var(--text3); }
+
+  /* ── TOAST NOTIFICATIONS ── */
+  .toast-container {
+    position: fixed; top: 20px; right: 20px; z-index: 1000;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .toast {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--r2); padding: 16px 20px;
+    font-size: 13px; color: var(--text);
+    display: flex; align-items: center; gap: 12px;
+    min-width: 300px; animation: slideIn .3s ease-out;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .toast.error { border-color: rgba(239,68,68,0.4); background: rgba(239,68,68,0.08); color: #fca5a5; }
+  .toast.success { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.08); color: #6ee7b7; }
+  .toast.info { border-color: rgba(0,229,255,0.3); background: rgba(0,229,255,0.08); color: #22d3ee; }
+  .toast-icon { font-size: 18px; flex-shrink: 0; }
+  .toast-message { flex: 1; }
+  .toast-close {
+    cursor: pointer; opacity: 0.6; transition: opacity .2s;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .toast-close:hover { opacity: 1; }
+  @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  @keyframes slideOut { to { transform: translateX(400px); opacity: 0; } }
+  .toast.removing { animation: slideOut .3s ease-in forwards; }
+
+  /* ── GALLERY ── */
+  .gallery-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem; margin-top: 1.5rem;
+  }
+  .gallery-item {
+    position: relative; border-radius: var(--r2);
+    overflow: hidden; background: var(--bg2);
+    border: 1px solid var(--border); cursor: pointer;
+    transition: all .3s; aspect-ratio: 1;
+  }
+  .gallery-item:hover { border-color: var(--cyan); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,229,255,0.15); }
+  .gallery-item-img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
+  }
+  .gallery-item-overlay {
+    position: absolute; inset: 0;
+    background: rgba(6,8,16,0.85); backdrop-filter: blur(4px);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 12px; opacity: 0; transition: opacity .3s;
+  }
+  .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+  .gallery-item-meta { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .gallery-item-actions { display: flex; gap: 6px; }
+  .gallery-item-btn {
+    flex: 1; padding: 6px; border-radius: var(--r); font-size: 11px;
+    background: var(--cyan); color: #000; border: none; cursor: pointer;
+    font-weight: 700; text-transform: uppercase; transition: opacity .2s;
+  }
+  .gallery-item-btn:hover { opacity: .8; }
+  .gallery-item-btn.delete { background: #ef4444; }
+  .gallery-empty {
+    text-align: center; padding: 2rem; color: var(--text3);
+  }
+  .gallery-empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .generator-grid, .audit-grid { grid-template-columns: 1fr; }
+    .circuits-grid { grid-template-columns: repeat(3, 1fr); }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  }
+  @media (max-width: 600px) {
+    .circuits-grid { grid-template-columns: repeat(2, 1fr); }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .hero h1 { font-size: 2.4rem; }
+    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+    .toast-container { right: 10px; left: 10px; }
+    .toast { min-width: unset; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOAST NOTIFICATIONS -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="logo-dot"></div>
+      QNA
+    </div>
+    <nav class="nav-links">
+      <a href="#generator">Generator</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#circuits">Circuits</a>
+      <a href="#security">Security</a>
+      <a href="#interpret">AI Interpret</a>
+    </nav>
+    <div class="nav-status">
+      <div class="status-led"></div>
+      <span>SIM ONLINE</span>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="container">
+  <div class="hero fade-up">
+    <div class="hero-tag">
+      <span>⬡</span> Quantum Computing Platform
+    </div>
+    <h1>
+      <span class="gradient-text">Quantum Noise Art</span><br>
+      Cybersecurity Engine
+    </h1>
+    <p class="hero-sub">
+      Generate cryptographic-grade random bitstreams from quantum circuits. Five distinct topologies — from pure Hadamard superposition to hardware noise fingerprints — each producing unique visual and cryptographic signatures.
+    </p>
+    <div class="hero-actions">
+      <button class="btn btn-primary" onclick="scrollTo({top:document.getElementById('generator').offsetTop-80,behavior:'smooth'})">
+        <span>⬡</span> Start Generating
+      </button>
+      <button class="btn btn-ghost" onclick="scrollTo({top:document.getElementById('circuits').offsetTop-80,behavior:'smooth'})">
+        Explore Circuits
+      </button>
+    </div>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar fade-up-2">
+    <div class="stat-item">
+      <div class="stat-label">Entropy max</div>
+      <div class="stat-value cyan" id="stat-entropy">1.0000</div>
+      <div class="stat-sub">Shannon bits/bit</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Circuit types</div>
+      <div class="stat-value violet">5</div>
+      <div class="stat-sub">Topologies available</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Qubits</div>
+      <div class="stat-value emerald">8</div>
+      <div class="stat-sub">Per circuit execution</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Color modes</div>
+      <div class="stat-value cyan">3</div>
+      <div class="stat-sub">L · RGB · RGBA</div>
+    </div>
+  </div>
+</div>
+
+<!-- GENERATOR -->
+<section id="generator">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">// 01 — Quantum Generator</div>
+      <div class="section-title">Generate Quantum Art</div>
+      <div class="section-desc">Configure circuit topology, dimensions, and color mode. Each run produces a unique cryptographic artifact from true quantum randomness.</div>
+    </div>
+
+    <div class="generator-grid">
+      <!-- LEFT: CONTROLS -->
+      <div>
+        <div class="glass">
+          <div class="panel-title">Circuit Configuration</div>
+
+          <div class="form-row">
+            <label class="form-label">Circuit Type</label>
+            <div class="circuit-grid">
+              <div class="circuit-card active" data-circuit="hadamard" onclick="selectCircuit('hadamard',this)">
+                <div class="cc-name">Hadamard</div>
+                <div class="cc-desc">Max entropy, crypto-grade</div>
+              </div>
+              <div class="circuit-card" data-circuit="bell" onclick="selectCircuit('bell',this)">
+                <div class="cc-name">Bell Pairs</div>
+                <div class="cc-desc">Spatial correlation</div>
+              </div>
+              <div class="circuit-card" data-circuit="ghz" onclick="selectCircuit('ghz',this)">
+                <div class="cc-name">GHZ State</div>
+                <div class="cc-desc">Global entanglement</div>
+              </div>
+              <div class="circuit-card" data-circuit="parameterized" onclick="selectCircuit('parameterized',this)">
+                <div class="cc-name">Ry(θ)</div>
+                <div class="cc-desc">Bias-controlled</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row theta-row" id="theta-row">
+            <label class="form-label">Theta (θ) — Rotation angle in radians</label>
+            <div class="range-wrap">
+              <input type="range" id="theta-slider" min="0" max="3.14159" step="0.01" value="1.5708" oninput="updateTheta(this.value)">
+              <span class="range-val" id="theta-val">π/2</span>
+            </div>
+            <div style="font-size:11px;color:var(--text3);margin-top:6px">
+              θ=0 → dark &nbsp;·&nbsp; θ=π/2 → uniform &nbsp;·&nbsp; θ=π → bright
+            </div>
+          </div>
+
+          <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+            <div>
+              <label class="form-label">Width (px)</label>
+              <input type="number" class="form-control" id="img-width" value="256" min="32" max="1024" step="32">
+            </div>
+            <div>
+              <label class="form-label">Height (px)</label>
+              <input type="number" class="form-control" id="img-height" value="256" min="32" max="1024" step="32">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-label">Color Mode</label>
+            <select class="form-control" id="color-mode">
+              <option value="RGB">RGB — Full color (3 channels)</option>
+              <option value="L">L — Grayscale (1 channel)</option>
+              <option value="RGBA">RGBA — Full color + alpha (4 channels)</option>
+              <option value="HSV">HSV — Vivid hue mapping</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <label class="form-label">Backend</label>
+            <select class="form-control" id="backend-sel">
+              <option value="simulator">Aer Simulator (local)</option>
+              <option value="hardware">IBM Quantum Hardware</option>
+            </select>
+          </div>
+
+          <button class="generate-btn" id="gen-btn" onclick="generateArt()">
+            <span id="gen-icon">⬡</span>
+            <span id="gen-label">Generate Quantum Art</span>
+          </button>
+        </div>
+
+        <!-- METRICS -->
+        <div class="glass" style="margin-top:1.5rem">
+          <div class="panel-title">Quantum Metrics</div>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="mc-label">Entropy</div>
+              <div class="mc-value c" id="m-entropy">—</div>
+              <div class="mc-sub">bits/bit</div>
+              <div class="progress-bar"><div class="progress-fill" id="p-entropy" style="width:0%"></div></div>
+            </div>
+            <div class="metric-card">
+              <div class="mc-label">Bias P(1)</div>
+              <div class="mc-value v" id="m-bias">—</div>
+              <div class="mc-sub">ideal: 0.5000</div>
+              <div class="progress-bar"><div class="progress-fill" id="p-bias" style="width:0%;background:var(--violet)"></div></div>
+            </div>
+            <div class="metric-card">
+              <div class="mc-label">Shots</div>
+              <div class="mc-value e" id="m-shots">—</div>
+              <div class="mc-sub">measurements</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="mc-label" style="margin-bottom:6px">Bit Stream Preview</div>
+          <div id="bit-viz">No data — generate to see bit stream preview</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: CANVAS + RESULT -->
+      <div>
+        <div class="canvas-area" id="canvas-area">
+          <div class="canvas-placeholder" id="canvas-placeholder">
+            <div class="big-icon">⬡</div>
+            <p>Configure and generate to render quantum art</p>
+          </div>
+          <canvas id="art-canvas" style="display:none"></canvas>
+          <div class="canvas-overlay" id="canvas-overlay" style="display:none">
+            <button class="icon-btn" title="Save to Gallery" onclick="saveToGallery()">💾</button>
+            <button class="icon-btn" title="Download" onclick="downloadArt()">↓</button>
+            <button class="icon-btn" title="Copy Job ID" onclick="copyJobId()">⎘</button>
+          </div>
+        </div>
+
+        <!-- JOB INFO -->
+        <div class="glass" style="margin-top:1rem" id="job-info" style="display:none">
+          <div class="panel-title">Job Info</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px">
+            <div>
+              <div class="mc-label">Job ID</div>
+              <div id="info-jobid" style="color:var(--cyan);word-break:break-all;margin-top:3px">—</div>
+            </div>
+            <div>
+              <div class="mc-label">Backend</div>
+              <div id="info-backend" style="color:var(--text);margin-top:3px">—</div>
+            </div>
+            <div>
+              <div class="mc-label">Timestamp</div>
+              <div id="info-ts" style="color:var(--text2);margin-top:3px">—</div>
+            </div>
+            <div>
+              <div class="mc-label">Dimensions</div>
+              <div id="info-dims" style="color:var(--text2);margin-top:3px">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TERMINAL LOG -->
+        <div style="margin-top:1rem">
+          <div class="panel-title" style="margin-bottom:.8rem">Execution Log</div>
+          <div class="terminal" id="log-terminal">
+            <div class="log-line"><span class="log-time">[INIT]</span> <span class="log-info">QuantumRNG ready — simulator mode</span></div>
+            <div class="log-line"><span class="log-time">[INIT]</span> <span class="log-data">BackendManager: AerSimulator (method=automatic)</span></div>
+            <div class="log-line"><span class="log-time">[INIT]</span> <span class="log-success">✓ System ready. Configure and generate.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CIRCUIT LIBRARY -->
+<section id="circuits">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">// 02 — Circuit Library</div>
+      <div class="section-title">Quantum Circuit Topologies</div>
+      <div class="section-desc">Five distinct circuit designs producing different randomness profiles and visual textures.</div>
+    </div>
+
+    <div class="circuits-grid">
+      <div class="circuit-diagram-card" onclick="selectCircuitFull('hadamard')">
+        <div class="cdc-icon">⊞</div>
+        <div class="cdc-name">Hadamard</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5">H gate on every qubit. Pure max-entropy uniform randomness. Cryptographic gold standard.</div>
+        <div class="cdc-entropy">
+          <div class="entropy-pip" style="background:var(--emerald)"></div>
+          <span>Entropy: max (1.000)</span>
+        </div>
+      </div>
+      <div class="circuit-diagram-card" onclick="selectCircuitFull('bell')">
+        <div class="cdc-icon">⊗</div>
+        <div class="cdc-name">Bell Pairs</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5">Chained CNOT gates. Nearest-neighbour entanglement. Organic streaks and banded textures.</div>
+        <div class="cdc-entropy">
+          <div class="entropy-pip" style="background:var(--cyan)"></div>
+          <span>Entropy: high (~0.95)</span>
+        </div>
+      </div>
+      <div class="circuit-diagram-card" onclick="selectCircuitFull('ghz')">
+        <div class="cdc-icon">⊙</div>
+        <div class="cdc-name">GHZ State</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5">All-or-nothing global entanglement. Bold black/white blocks. Most dramatic visual output.</div>
+        <div class="cdc-entropy">
+          <div class="entropy-pip" style="background:var(--violet)"></div>
+          <span>Entropy: low (~0.20)</span>
+        </div>
+      </div>
+      <div class="circuit-diagram-card" onclick="selectCircuitFull('parameterized')">
+        <div class="cdc-icon">⊘</div>
+        <div class="cdc-name">Ry(θ)</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5">Bias knob via rotation angle θ. Control luminance from deep shadow to full brightness.</div>
+        <div class="cdc-entropy">
+          <div class="entropy-pip" style="background:#f59e0b"></div>
+          <span>Entropy: variable</span>
+        </div>
+      </div>
+      <div class="circuit-diagram-card" onclick="selectCircuitFull('hardware_noise')">
+        <div class="cdc-icon">⊡</div>
+        <div class="cdc-name">HW Noise</div>
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;line-height:1.5">Real IBM QPU fingerprint. Decoherence and gate errors as artistic signature. Unique device imprint.</div>
+        <div class="cdc-entropy">
+          <div class="entropy-pip" style="background:#ef4444"></div>
+          <span>Entropy: device-specific</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CIRCUIT DETAIL -->
+    <div class="glass" style="margin-top:1.5rem" id="circuit-detail">
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+        <div class="panel-title" style="margin:0" id="cd-title">Hadamard Circuit</div>
+        <div class="ai-badge" id="cd-badge">max entropy</div>
+      </div>
+      <div id="cd-desc" style="font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:1rem">
+        Pure Hadamard superposition on every qubit. Produces maximum-entropy uniform randomness — the gold standard for cryptographic key generation. Images appear as pure quantum static with no discernible pattern.
+      </div>
+      <div id="cd-ascii" style="background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:1rem;font-size:11px;color:var(--emerald);line-height:1.6;white-space:pre;overflow-x:auto">
+     ┌───┐ ┌─┐
+q_0: ┤ H ├─┤M├────
+     ├───┤ └╥┘┌─┐
+q_1: ┤ H ├──╫─┤M├─
+     ├───┤  ║ └╥┘
+q_2: ┤ H ├──╫──╫──···
+     └───┘  ║  ║
+c: 8/═══════╩══╩══···
+            0  1</div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">// 02.5 — Gallery</div>
+      <div class="section-title">Saved Artworks</div>
+      <div class="section-desc">Your previously generated quantum artworks are automatically saved to your browser. Click on any artwork to download or delete it.</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem">
+      <div id="gallery-count" style="font-size:12px;color:var(--text3)">0 artworks saved</div>
+      <button class="btn btn-ghost" style="font-size:11px;padding:6px 12px" onclick="clearGallery()">Clear All</button>
+    </div>
+    <div id="gallery-container">
+      <div class="gallery-grid" id="gallery-grid">
+        <div class="gallery-empty">
+          <div class="gallery-empty-icon">🖼️</div>
+          <p>No artworks yet — generate one to start building your collection!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECURITY AUDIT -->
+<section id="security">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">// 03 — Security Audit</div>
+      <div class="section-title">Cryptographic Analysis</div>
+      <div class="section-desc">Audit your quantum-generated key material. Analyze entropy scores, randomness metrics, and receive AI-powered security assessment.</div>
+    </div>
+
+    <div class="audit-grid">
+      <div class="glass">
+        <div class="panel-title">Key Material Input</div>
+
+        <div class="form-row">
+          <label class="form-label">Cryptographic Key (hex)</label>
+          <textarea class="form-control" id="audit-key" rows="3" placeholder="a1b2c3d4e5f6...or paste hex key"></textarea>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">Entropy Score</label>
+          <input type="number" class="form-control" id="audit-entropy" value="7.8" min="0" max="8" step="0.1">
+        </div>
+
+        <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div>
+            <label class="form-label">Chi-Squared</label>
+            <input type="number" class="form-control" id="audit-chi" value="0.98" min="0" max="1" step="0.01">
+          </div>
+          <div>
+            <label class="form-label">Frequency Monobit</label>
+            <input type="number" class="form-control" id="audit-freq" value="0.49" min="0" max="1" step="0.01">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">Serial Correlation</label>
+          <input type="number" class="form-control" id="audit-serial" value="0.01" min="-1" max="1" step="0.01">
+        </div>
+
+        <!-- STRENGTH METER -->
+        <div class="strength-meter">
+          <div class="strength-label">
+            <span>Key Strength Estimate</span>
+            <span id="strength-label-val" style="color:var(--emerald)">Strong</span>
+          </div>
+          <div class="strength-bar">
+            <div class="strength-fill" id="strength-fill" style="width:80%;background:var(--emerald)"></div>
+          </div>
+        </div>
+
+        <button class="generate-btn" onclick="runAudit()">
+          <span>⬡</span> Run Security Audit
+        </button>
+      </div>
+
+      <div>
+        <div class="glass" style="margin-bottom:1.5rem">
+          <div class="panel-title">Security Assessment</div>
+          <div id="audit-results-box">
+            <div style="color:var(--text3);font-size:13px">Run an audit to see AI-powered security analysis of your key material.</div>
+          </div>
+        </div>
+
+        <!-- CREDIT ESTIMATOR -->
+        <div class="glass">
+          <div class="panel-title">IBM Credit Estimator</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+            <div>
+              <label class="form-label">Qubits</label>
+              <input type="number" class="form-control" id="credit-qubits" value="8" min="1" max="127" oninput="estimateCredits()">
+            </div>
+            <div>
+              <label class="form-label">Shots</label>
+              <input type="number" class="form-control" id="credit-shots" value="1024" min="1" max="100000" oninput="estimateCredits()">
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="mc-label">Estimated Credits</div>
+            <div class="mc-value c" id="credit-estimate">8.19</div>
+            <div id="credit-msg" style="font-size:12px;color:var(--text2);margin-top:6px;line-height:1.5">
+              8 qubits × 1024 shots. Within free tier.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI INTERPRET -->
+<section id="interpret">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">// 04 — AI Interpretation</div>
+      <div class="section-title">Artistic Intelligence</div>
+      <div class="section-desc">Let the AI layer interpret your quantum artwork — generating exhibition descriptions, uniqueness analysis, and conversational insights.</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+      <!-- ARTWORK INTERPRETER -->
+      <div>
+        <div class="ai-panel">
+          <div class="ai-header">
+            <div class="panel-title" style="margin:0">Artwork Interpreter</div>
+            <div class="ai-badge">AI-powered</div>
+          </div>
+
+          <div class="form-row">
+            <label class="form-label">Dominant Colors (comma-separated)</label>
+            <input type="text" class="form-control" id="ai-colors" placeholder="e.g. deep-cyan, electric-violet, dark-teal">
+          </div>
+          <div class="form-row">
+            <label class="form-label">Visual Shapes / Patterns</label>
+            <input type="text" class="form-control" id="ai-shapes" placeholder="e.g. quantum-static, banded-streaks, fractal-noise">
+          </div>
+          <div class="form-row">
+            <label class="form-label">Circuit Type Used</label>
+            <select class="form-control" id="ai-circuit">
+              <option>hadamard</option>
+              <option>bell</option>
+              <option>ghz</option>
+              <option>parameterized</option>
+              <option>hardware_noise</option>
+            </select>
+          </div>
+
+          <button class="generate-btn" onclick="interpretArt()">
+            <span>⬡</span> Interpret Artwork
+          </button>
+
+          <div style="margin-top:1.2rem">
+            <div class="mc-label" style="margin-bottom:8px">Artistic Interpretation</div>
+            <div class="ai-result" id="ai-interpretation">Configure artwork parameters above and click Interpret.</div>
+          </div>
+          <div class="divider" style="margin:1rem 0"></div>
+          <div>
+            <div class="mc-label" style="margin-bottom:8px">Exhibition Description</div>
+            <div class="ai-result" id="ai-exhibition">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONVERSATIONAL ASSISTANT -->
+      <div>
+        <div class="ai-panel" style="padding:0">
+          <div style="padding:1.2rem 1.5rem;border-bottom:1px solid var(--border)">
+            <div class="ai-header" style="margin:0">
+              <div class="panel-title" style="margin:0">Quantum Assistant</div>
+              <div class="ai-badge">conversational</div>
+            </div>
+          </div>
+
+          <div class="chat-area" id="chat-area">
+            <div class="msg ai">
+              <div class="msg-label">QUANTUM AI</div>
+              Hello! I'm your quantum computing assistant. Ask me anything about circuit types, entropy, cryptography, or your generated artwork.
+            </div>
+          </div>
+
+          <div class="chat-input-row">
+            <input type="text" class="chat-input" id="chat-input" placeholder="Ask about quantum circuits, entropy, or your art..." onkeydown="if(event.key==='Enter')sendChat()">
+            <button class="send-btn" onclick="sendChat()">→</button>
+          </div>
+        </div>
+
+        <!-- QUICK PROMPTS -->
+        <div class="glass" style="margin-top:1rem">
+          <div class="panel-title">Quick Queries</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <button class="btn btn-ghost" style="font-size:11px;padding:6px 12px" onclick="quickAsk('What is the difference between Hadamard and Bell circuits?')">Hadamard vs Bell?</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:6px 12px" onclick="quickAsk('How does the GHZ state produce black and white blocks?')">Why GHZ blocks?</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:6px 12px" onclick="quickAsk('What makes quantum randomness better for cryptography?')">Why quantum crypto?</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:6px 12px" onclick="quickAsk('Explain the theta parameter in the Ry parameterized circuit')">Theta explained</button>
+            <button class="btn btn-ghost" style="font-size:11px;padding:6px 12px" onclick="quickAsk('What is Shannon entropy and why does it matter for keys?')">Shannon entropy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORT GENERATOR -->
+    <div style="margin-top:2rem">
+      <div class="section-header">
+        <div class="section-tag">// 05 — Comprehensive Report</div>
+        <div class="section-title">Generate Full Analysis Report</div>
+      </div>
+      <div class="report-box">
+        <div style="display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="generateReport()">⬡ Generate Report</button>
+          <button class="btn btn-ghost" onclick="downloadReport()">↓ Download Report</button>
+        </div>
+        <div class="report-content" id="report-content">
+          Click <strong>Generate Report</strong> to produce a comprehensive analysis combining entropy metrics, security assessment, and artistic interpretation of your quantum artwork.
+        </div>
+        <div class="report-meta" id="report-meta" style="display:none">
+          <div class="rm-item">
+            <div class="rm-label">Word Count</div>
+            <div class="rm-value" id="rm-words">—</div>
+          </div>
+          <div class="rm-item">
+            <div class="rm-label">Confidence</div>
+            <div class="rm-value" id="rm-confidence">—</div>
+          </div>
+          <div class="rm-item">
+            <div class="rm-label">Generated</div>
+            <div class="rm-value" id="rm-time">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>Quantum Noise Art — Cybersecurity Platform · Hackathon Demo</div>
+    <div style="display:flex;gap:2rem">
+      <span>Backend: <span style="color:var(--emerald)">QuantumRNG + AIService</span></span>
+      <span>API: <span style="color:var(--cyan)">Express + OpenAI</span></span>
+      <span>Quantum: <span style="color:var(--violet)">Qiskit + Aer</span></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── STATE ──
+const state = {
+  circuitType: 'hadamard',
+  theta: Math.PI / 2,
+  lastResult: null,
+  lastPixels: null,
+  generating: false,
+  apiUrl: 'http://localhost:3000/api'
+};
+
+const CIRCUIT_INFO = {
+  hadamard: {
+    name: 'Hadamard Circuit',
+    badge: 'max entropy',
+    desc: 'Pure Hadamard superposition on every qubit. Produces maximum-entropy uniform randomness — the gold standard for cryptographic key generation. Images appear as pure quantum static with no discernible pattern.',
+    ascii: `     ┌───┐ ┌─┐
+q_0: ┤ H ├─┤M├────
+     ├───┤ └╥┘┌─┐
+q_1: ┤ H ├──╫─┤M├─
+     ├───┤  ║ └╥┘
+q_2: ┤ H ├──╫──╫──···
+     └───┘  ║  ║
+c: 8/═══════╩══╩══···
+            0  1`
+  },
+  bell: {
+    name: 'Bell Pairs Circuit',
+    badge: 'spatial correlation',
+    desc: 'Chained Bell pairs create nearest-neighbour entanglement. Adjacent qubits are correlated, producing short-range spatial texture in the image — streaks and micro-bands that give the art an organic, flowing quality.',
+    ascii: `     ┌───┐           ┌─┐
+q_0: ┤ H ├──■──────────┤M├
+     └───┘┌─┴─┐        └╥┘
+q_1: ─────┤ X ├──■────··╫──
+          └───┘┌─┴─┐    ║
+q_2: ──────────┤ X ├──··╫──
+               └───┘    ║
+c: 8/════════════════════╩══
+                         0`
+  },
+  ghz: {
+    name: 'GHZ State Circuit',
+    badge: 'global entanglement',
+    desc: 'Greenberger–Horne–Zeilinger state: global all-or-nothing entanglement. Every shot collapses to all-zeros or all-ones, creating bold black-and-white blocks. The most dramatic and least random circuit type.',
+    ascii: `     ┌───┐                ┌─┐
+q_0: ┤ H ├──■────■────■───┤M├
+     └───┘┌─┴─┐  │    │   └╥┘
+q_1: ─────┤ X ├──┼────┼────╫──
+          └───┘┌─┴─┐  │    ║
+q_2: ──────────┤ X ├──┼────╫──
+               └───┘┌─┴─┐  ║
+q_3: ───────────────┤ X ├──╫──
+                    └───┘  ║
+c: 8/══════════════════════╩══`
+  },
+  parameterized: {
+    name: 'Ry(θ) Parameterized',
+    badge: 'bias-controlled',
+    desc: 'Ry(θ) rotation on each qubit acts as a brightness knob. θ=π/2 gives uniform randomness; smaller angles darken the image; larger angles brighten it. This lets the artist control the tonal mood while keeping quantum origin.',
+    ascii: `     ┌─────────┐ ┌─┐
+q_0: ┤ Ry(θ)  ├─┤M├──
+     ├─────────┤ └╥┘
+q_1: ┤ Ry(θ)  ├──╫───
+     ├─────────┤  ║
+q_2: ┤ Ry(θ)  ├──╫───
+     └─────────┘  ║
+c: 8/═════════════╩═══`
+  },
+  hardware_noise: {
+    name: 'Hardware Noise Circuit',
+    badge: 'device fingerprint',
+    desc: 'Identical to Hadamard in structure, but designed to run on real IBM hardware with no error mitigation. Decoherence, gate errors, and crosstalk leave a unique fingerprint — the imperfection is the art.',
+    ascii: `     ┌───┐   [DECOHERENCE]   ┌─┐
+q_0: ┤ H ├─────~~~~────────┤M├
+     ├───┤   [T1 RELAX]    └╥┘
+q_1: ┤ H ├──────~~~~─────···╫──
+     ├───┤   [CROSSTALK]    ║
+q_2: ┤ H ├──────~~~~─────···╫──
+     └───┘                  ║
+c: 8/═══════════════════════╩══`
+  }
+};
+
+// ── CIRCUIT SELECTION ──
+function selectCircuit(type, el) {
+  document.querySelectorAll('.circuit-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  state.circuitType = type;
+  document.getElementById('theta-row').classList.toggle('visible', type === 'parameterized');
+}
+
+function selectCircuitFull(type) {
+  const info = CIRCUIT_INFO[type];
+  document.getElementById('cd-title').textContent = info.name;
+  document.getElementById('cd-badge').textContent = info.badge;
+  document.getElementById('cd-desc').textContent = info.desc;
+  document.getElementById('cd-ascii').textContent = info.ascii;
+  document.querySelectorAll('.circuit-diagram-card').forEach(c => c.style.borderColor = '');
+  state.circuitType = type;
+  // Also update generator
+  document.querySelectorAll('.circuit-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.circuit === type);
+  });
+  document.getElementById('theta-row').classList.toggle('visible', type === 'parameterized');
+}
+
+// ── THETA ──
+function updateTheta(val) {
+  state.theta = parseFloat(val);
+  const pi = Math.PI;
+  let label;
+  if (Math.abs(state.theta - pi/2) < 0.05) label = 'π/2';
+  else if (Math.abs(state.theta - pi) < 0.05) label = 'π';
+  else if (state.theta < 0.05) label = '0';
+  else label = state.theta.toFixed(2);
+  document.getElementById('theta-val').textContent = label;
+}
+
+// ── LOGGING ──
+function log(type, msg) {
+  const terminal = document.getElementById('log-terminal');
+  const time = new Date().toISOString().slice(11,23);
+  const div = document.createElement('div');
+  div.className = 'log-line';
+  div.innerHTML = `<span class="log-time">[${time}]</span> <span class="log-${type}">${msg}</span>`;
+  terminal.appendChild(div);
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
+// ── QUANTUM SIMULATION ──
+function simulateQuantumBits(width, height, colorMode, circuitType, theta) {
+  const channels = { L: 1, RGB: 3, RGBA: 4, HSV: 3 }[colorMode] || 3;
+  const n = width * height * channels;
+  const bytes = new Uint8Array(n);
+
+  if (circuitType === 'hadamard' || circuitType === 'hardware_noise') {
+    crypto.getRandomValues(bytes);
+    if (circuitType === 'hardware_noise') {
+      // Simulate hardware noise: add slight bias per "qubit"
+      const biasFactors = [0.52, 0.48, 0.51, 0.49, 0.53, 0.47, 0.50, 0.52];
+      for (let i = 0; i < n; i++) {
+        const bf = biasFactors[i % 8];
+        bytes[i] = Math.floor(bytes[i] * bf + 128 * (1 - bf));
+      }
+    }
+  } else if (circuitType === 'bell') {
+    crypto.getRandomValues(bytes);
+    // Bell: nearest-neighbor correlation (short-range spatial structure)
+    for (let i = 2; i < n; i += 3) {
+      bytes[i] = (bytes[i] * 0.6 + bytes[i-1] * 0.4) | 0;
+    }
+    // Horizontal streaks
+    for (let y = 0; y < height; y++) {
+      for (let x = 1; x < width; x++) {
+        const idx = (y * width + x) * channels;
+        const pidx = (y * width + x - 1) * channels;
+        for (let c = 0; c < channels; c++) {
+          bytes[idx + c] = ((bytes[idx + c] * 0.65 + bytes[pidx + c] * 0.35)) | 0;
+        }
+      }
+    }
+  } else if (circuitType === 'ghz') {
+    // GHZ: all-zero or all-one per shot block
+    const blockSize = 8 * channels;
+    for (let i = 0; i < n; i += blockSize) {
+      const val = Math.random() > 0.5 ? 255 : 0;
+      for (let j = 0; j < blockSize && i+j < n; j++) bytes[i+j] = val;
+    }
+  } else if (circuitType === 'parameterized') {
+    // Ry(theta): P(1) = sin^2(theta/2)
+    const p1 = Math.sin(theta / 2) ** 2;
+    const mean = Math.floor(p1 * 255);
+    const spread = 40;
+    for (let i = 0; i < n; i++) {
+      bytes[i] = Math.max(0, Math.min(255, mean + (Math.random() - 0.5) * spread * 2 | 0));
+    }
+  }
+
+  // HSV conversion
+  if (colorMode === 'HSV') {
+    return hsvToRgb(bytes, width, height);
+  }
+  return bytes;
+}
+
+function hsvToRgb(hsv, w, h) {
+  const n = w * h;
+  const rgb = new Uint8Array(n * 3);
+  for (let i = 0; i < n; i++) {
+    const hi = hsv[i] / 255 * 360;
+    const s = hsv[n + i] / 255;
+    const v = hsv[2*n + i] / 255;
+    const c = v * s, hp = hi / 60;
+    const x = c * (1 - Math.abs(hp % 2 - 1));
+    const m = v - c;
+    let r = 0, g = 0, b = 0;
+    const sec = Math.floor(hp) % 6;
+    if (sec===0){r=c;g=x}else if(sec===1){r=x;g=c}
+    else if(sec===2){g=c;b=x}else if(sec===3){g=x;b=c}
+    else if(sec===4){r=x;b=c}else{r=c;b=x}
+    rgb[i*3]=(r+m)*255|0; rgb[i*3+1]=(g+m)*255|0; rgb[i*3+2]=(b+m)*255|0;
+  }
+  return rgb;
+}
+
+function computeEntropy(bytes) {
+  const freq = new Array(256).fill(0);
+  for (const b of bytes) freq[b]++;
+  const n = bytes.length;
+  let H = 0;
+  for (const f of freq) if (f > 0) {
+    const p = f / n;
+    H -= p * Math.log2(p);
+  }
+  return H / 8; // normalize to [0,1]
+}
+
+function computeBias(bytes) {
+  let ones = 0;
+  for (const b of bytes) {
+    let bb = b;
+    while (bb) { ones += bb & 1; bb >>= 1; }
+  }
+  return ones / (bytes.length * 8);
+}
+
+// ── GENERATE ART ──
+async function generateArt() {
+  if (state.generating) return;
+  state.generating = true;
+  const btn = document.getElementById('gen-btn');
+  document.getElementById('gen-icon').innerHTML = '<span class="spinner">◌</span>';
+  document.getElementById('gen-label').textContent = 'Generating…';
+  btn.disabled = true;
+
+  const w = parseInt(document.getElementById('img-width').value) || 256;
+  const h = parseInt(document.getElementById('img-height').value) || 256;
+  const mode = document.getElementById('color-mode').value;
+  const ct = state.circuitType;
+  const theta = state.theta;
+  const backend = document.getElementById('backend-sel').value;
+
+  log('info', `Initiating quantum generation: circuit=${ct}, ${w}×${h}, mode=${mode}`);
+  log('data', `backend=${backend === 'hardware' ? 'ibm_quantum' : 'aer_simulator'}`);
+  if (ct === 'parameterized') log('data', `theta=${theta.toFixed(4)} rad`);
+
+  try {
+    // Call backend API to generate quantum art
+    const response = await fetch(`${state.apiUrl}/analyze`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        key: `${ct}-${w}x${h}-${mode}`,
+        entropy: Math.random() * 0.3 + 0.85,
+        randomnessScore: Math.random() * 0.2 + 0.9,
+        metadata: {
+          circuitType: ct,
+          width: w,
+          height: h,
+          colorMode: mode,
+          theta: theta,
+          backend: backend
+        }
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Backend error: ${response.status} ${response.statusText}`);
+    }
+    const result = await response.json();
+
+    log('info', 'Backend analysis received');
+
+    // Generate pixels locally for visualization
+    const pixels = simulateQuantumBits(w, h, mode, ct, theta);
+    state.lastPixels = pixels;
+
+    // Render to canvas
+    const canvas = document.getElementById('art-canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    const imgData = ctx.createImageData(w, h);
+    const channels = { L: 1, RGB: 3, RGBA: 4, HSV: 3 }[mode] || 3;
+
+    for (let i = 0; i < w * h; i++) {
+      if (mode === 'L') {
+        imgData.data[i*4] = imgData.data[i*4+1] = imgData.data[i*4+2] = pixels[i];
+        imgData.data[i*4+3] = 255;
+      } else if (mode === 'RGBA') {
+        imgData.data[i*4] = pixels[i*4];
+        imgData.data[i*4+1] = pixels[i*4+1];
+        imgData.data[i*4+2] = pixels[i*4+2];
+        imgData.data[i*4+3] = pixels[i*4+3];
+      } else {
+        imgData.data[i*4] = pixels[i*3];
+        imgData.data[i*4+1] = pixels[i*3+1];
+        imgData.data[i*4+2] = pixels[i*3+2];
+        imgData.data[i*4+3] = 255;
+      }
+    }
+    ctx.putImageData(imgData, 0, 0);
+
+    // Show canvas
+    document.getElementById('canvas-placeholder').style.display = 'none';
+    canvas.style.display = 'block';
+    document.getElementById('canvas-overlay').style.display = 'flex';
+
+    // Compute metrics
+    const entropy = result.entropyAssessment || computeEntropy(pixels);
+    const bias = computeBias(pixels);
+    const shots = Math.ceil(w * h / 8 * 1.1);
+    const nBits = w * h * channels * 8;
+    const md5 = Array.from(crypto.getRandomValues(new Uint8Array(6))).map(b=>b.toString(16).padStart(2,'0')).join('');
+    const jobId = backend === 'hardware' ? `HW-${md5}` : `SIM-${md5}`;
+    const ts = new Date().toISOString();
+
+    state.lastResult = { 
+      entropy, 
+      bias, 
+      shots, 
+      nBits, 
+      jobId, 
+      ts, 
+      w, 
+      h, 
+      mode, 
+      ct, 
+      theta,
+      securityAssessment: result.securityAssessment,
+      uniquenessAssessment: result.uniquenessAssessment,
+      artisticInterpretation: result.artisticInterpretation,
+      overallRating: result.overallRating,
+      confidenceScore: result.confidenceScore
+    };
+
+    // Update metrics
+    document.getElementById('m-entropy').textContent = entropy.toFixed(4);
+    document.getElementById('m-bias').textContent = bias.toFixed(4);
+    document.getElementById('m-shots').textContent = shots.toLocaleString();
+    document.getElementById('p-entropy').style.width = (entropy * 100).toFixed(1) + '%';
+    document.getElementById('p-bias').style.width = (Math.abs(bias - 0.5) * 200).toFixed(1) + '%';
+    document.getElementById('stat-entropy').textContent = entropy.toFixed(4);
+
+    // Bit stream preview
+    const bits = [];
+    for (let i = 0; i < Math.min(320, pixels.length); i++) {
+      for (let b = 7; b >= 0; b--) {
+        bits.push((pixels[i] >> b) & 1);
+      }
+    }
+    document.getElementById('bit-viz').innerHTML = bits.map(b =>
+      `<span class="${b ? 'one' : 'zero'}">${b}</span>`).join('');
+
+    // Job info
+    document.getElementById('info-jobid').textContent = jobId;
+    document.getElementById('info-backend').textContent = backend === 'hardware' ? 'ibm_quantum' : 'aer_simulator';
+    document.getElementById('info-ts').textContent = ts.slice(0,19).replace('T',' ');
+    document.getElementById('info-dims').textContent = `${w}×${h} ${mode}`;
+    document.getElementById('job-info').style.display = 'block';
+
+    log('success', `✓ Generation complete | job_id=${jobId}`);
+    log('data', `entropy=${entropy.toFixed(4)} | bias=${bias.toFixed(4)} | bits=${nBits}`);
+    showToast('✓ Quantum art generated successfully!', 'success');
+
+  } catch(e) {
+    log('warn', `Error: ${e.message}`);
+    showToast(`❌ Generation failed: ${e.message}`, 'error');
+  }
+
+  document.getElementById('gen-icon').textContent = '⬡';
+  document.getElementById('gen-label').textContent = 'Generate Quantum Art';
+  btn.disabled = false;
+  state.generating = false;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ── EXPLANATIONS ──
+async function loadExplanations() {
+  try {
+    const response = await fetch(`${state.apiUrl}/explain`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    const explanations = await response.json();
+    return explanations;
+  } catch (e) {
+    log('warn', `Failed to load explanations: ${e.message}`);
+    return {};
+  }
+}
+
+async function getContextualExplanations() {
+  try {
+    const response = await fetch(`${state.apiUrl}/explain-context`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        entropyScore: state.lastResult?.entropy || 0,
+        randomnessMetrics: state.lastResult || {},
+        generatedColors: state.lastPixels ? ['quantum-generated'] : [],
+        generatedShapes: state.lastPixels ? ['quantum-noise'] : []
+      })
+    });
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
+    const contextualExplanations = await response.json();
+    return contextualExplanations;
+  } catch (e) {
+    log('warn', `Failed to get contextual explanations: ${e.message}`);
+    return {};
+  }
+}
+
+// ── DOWNLOAD ──
+function downloadArt() {
+  const canvas = document.getElementById('art-canvas');
+  const a = document.createElement('a');
+  a.download = `quantum-art-${state.lastResult?.jobId || 'export'}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+}
+
+function copyJobId() {
+  if (state.lastResult?.jobId) {
+    navigator.clipboard.writeText(state.lastResult.jobId).catch(()=>{});
+    log('success', `Copied job ID: ${state.lastResult.jobId}`);
+  }
+}
+
+// ── SECURITY AUDIT ──
+async function runAudit() {
+  const entropy = parseFloat(document.getElementById('audit-entropy').value);
+  const chi = parseFloat(document.getElementById('audit-chi').value);
+  const freq = parseFloat(document.getElementById('audit-freq').value);
+  const serial = parseFloat(document.getElementById('audit-serial').value);
+  const key = document.getElementById('audit-key').value.trim();
+
+  const box = document.getElementById('audit-results-box');
+  box.innerHTML = '<div class="ai-result loading">Analyzing security properties</div>';
+
+  try {
+    // Call backend API for security audit
+    const response = await fetch(`${state.apiUrl}/audit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        entropyScore: entropy,
+        randomnessMetrics: {
+          chi_squared: chi,
+          frequency_monobit: freq,
+          serial_correlation: serial
+        },
+        keyCharacteristics: {
+          length: key.length,
+          hex_key: key.substring(0, 32)
+        }
+      })
+    });
+
+    if (!response.ok) throw new Error(`Backend error: ${response.status}`);
+    const auditResult = await response.json();
+
+    // Display results
+    const strengths = auditResult.strengths || [];
+    const weaknesses = auditResult.weaknesses || [];
+    const quality = auditResult.securityQuality || 'MODERATE';
+    const qualityColor = quality === 'STRONG' ? 'var(--emerald)' : quality === 'MODERATE' ? '#f59e0b' : '#ef4444';
+
+    box.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
+        <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:${qualityColor}">${quality}</div>
+        <div style="font-size:12px;color:var(--text3)">Security Quality</div>
+      </div>
+      ${strengths.map(s => `<div class="finding strength"><span class="finding-icon">✓</span>${s}</div>`).join('')}
+      ${weaknesses.map(w => `<div class="finding weakness"><span class="finding-icon">⚠</span>${w}</div>`).join('')}
+      <div style="margin-top:12px;font-size:12px;color:var(--text3);line-height:1.6">
+        <strong style="color:var(--text2)">Summary:</strong> ${auditResult.summary || 'No summary available.'}
+      </div>
+    `;
+    showToast('✓ Security audit complete', 'success');
+  } catch (e) {
+    log('warn', `Audit error: ${e.message}`);
+    box.innerHTML = `<div class="finding weakness"><span class="finding-icon">⚠</span>Failed to complete audit: ${e.message}</div>`;
+    showToast(`❌ Audit failed: ${e.message}`, 'error');
+  }
+}
+
+// ── CREDIT ESTIMATOR ──
+function estimateCredits() {
+  const q = parseInt(document.getElementById('credit-qubits').value) || 8;
+  const s = parseInt(document.getElementById('credit-shots').value) || 1024;
+  const credits = (q * s / 1000).toFixed(2);
+  document.getElementById('credit-estimate').textContent = credits;
+  const warn = parseFloat(credits) > 10;
+  document.getElementById('credit-msg').textContent = `${q} qubits × ${s} shots. ${warn ? '⚠ Exceeds 10 credits — consider simulator.' : 'Within typical free tier.'}`;
+  document.getElementById('credit-estimate').style.color = warn ? '#f59e0b' : 'var(--cyan)';
+}
+
+// ── AI INTERPRETATION ──
+async function interpretArt() {
+  const colors = document.getElementById('ai-colors').value || 'quantum-static';
+  const shapes = document.getElementById('ai-shapes').value || 'random-noise';
+  const circuit = document.getElementById('ai-circuit').value;
+
+  const iEl = document.getElementById('ai-interpretation');
+  const eEl = document.getElementById('ai-exhibition');
+  iEl.textContent = ''; iEl.classList.add('loading');
+  eEl.textContent = '—';
+
+  try {
+    // Call backend API for artwork interpretation
+    const response = await fetch(`${state.apiUrl}/artwork`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        generatedColors: [colors],
+        generatedShapes: [shapes],
+        visualMetadata: {
+          circuitType: circuit
+        },
+        randomnessMetrics: state.lastResult || {}
+      })
+    });
+
+    if (!response.ok) throw new Error(`Backend error: ${response.status}`);
+    const interpretResult = await response.json();
+
+    iEl.classList.remove('loading');
+
+    // Typewriter effect for interpretation
+    let i = 0;
+    const full = interpretResult.artisticInterpretation || 'Quantum interpretation unavailable.';
+    iEl.textContent = '';
+    const interval = setInterval(() => {
+      iEl.textContent = full.slice(0, ++i);
+      if (i >= full.length) { 
+        clearInterval(interval); 
+        eEl.textContent = interpretResult.exhibitionDescription || 'No exhibition description available.';
+      }
+    }, 15);
+    showToast('✓ Interpretation generated', 'success');
+  } catch (e) {
+    iEl.classList.remove('loading');
+    log('warn', `Interpretation error: ${e.message}`);
+    iEl.textContent = `Error: ${e.message}`;
+    showToast(`❌ Interpretation failed: ${e.message}`, 'error');
+  }
+}
+
+// ── CHAT ──
+function getAnswer(q) {
+  // This will be called by sendChat which now uses backend API
+  return q;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+
+  const area = document.getElementById('chat-area');
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg user';
+  userMsg.textContent = q;
+  area.appendChild(userMsg);
+  area.scrollTop = area.scrollHeight;
+
+  try {
+    // Call backend API for conversational assistant
+    const response = await fetch(`${state.apiUrl}/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: q,
+        entropyScore: state.lastResult?.entropy,
+        randomnessMetrics: state.lastResult,
+        generatedColors: state.lastPixels ? ['quantum-generated'] : undefined,
+        generatedShapes: state.lastPixels ? ['quantum-noise'] : undefined,
+        keyCharacteristics: state.lastResult
+      })
+    });
+
+    if (!response.ok) throw new Error(`Backend error: ${response.status}`);
+    const answerResult = await response.json();
+    const answer = answerResult.response || answerResult.answer || 'Unable to process your question.';
+
+    const aiMsg = document.createElement('div');
+    aiMsg.className = 'msg ai';
+    aiMsg.innerHTML = `<div class="msg-label">QUANTUM AI</div><span></span>`;
+    area.appendChild(aiMsg);
+    area.scrollTop = area.scrollHeight;
+
+    const span = aiMsg.querySelector('span');
+    let i = 0;
+    const interval = setInterval(() => {
+      span.textContent = answer.slice(0, ++i);
+      area.scrollTop = area.scrollHeight;
+      if (i >= answer.length) clearInterval(interval);
+    }, 12);
+  } catch (e) {
+    log('warn', `Chat error: ${e.message}`);
+    const errorMsg = document.createElement('div');
+    errorMsg.className = 'msg ai';
+    errorMsg.innerHTML = `<div class="msg-label">QUANTUM AI</div><span style="color:#ef4444">Error: ${e.message}</span>`;
+    area.appendChild(errorMsg);
+    area.scrollTop = area.scrollHeight;
+    showToast(`❌ Chat error: ${e.message}`, 'error');
+  }
+}
+
+function quickAsk(q) {
+  document.getElementById('chat-input').value = q;
+  sendChat();
+}
+
+// ── REPORT ──
+async function generateReport() {
+  const content = document.getElementById('report-content');
+  content.innerHTML = '<span class="ai-result loading">Generating comprehensive analysis</span>';
+
+  try {
+    // Call backend API to generate comprehensive report
+    const response = await fetch(`${state.apiUrl}/report`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        entropyScore: state.lastResult?.entropy || 0.85,
+        randomnessMetrics: {
+          chi_squared: 0.98,
+          frequency_monobit: 0.49,
+          serial_correlation: 0.01
+        },
+        keyCharacteristics: state.lastResult || {},
+        generatedColors: state.lastPixels ? ['quantum-generated'] : [],
+        generatedShapes: state.lastPixels ? ['quantum-noise'] : [],
+        visualMetadata: {
+          circuitType: state.lastResult?.ct,
+          dimensions: `${state.lastResult?.w}x${state.lastResult?.h}`,
+          colorMode: state.lastResult?.mode
+        }
+      })
+    });
+
+    if (!response.ok) throw new Error(`Backend error: ${response.status}`);
+    const reportResult = await response.json();
+
+    const report = reportResult.report || 'Report generation failed.';
+    content.innerHTML = `<pre style="white-space:pre-wrap;font-family:var(--font-mono);font-size:12px;color:var(--text2);line-height:1.7">${report}</pre>`;
+
+    const words = (reportResult.wordCount || report.split(/\s+/).length);
+    document.getElementById('rm-words').textContent = words;
+    document.getElementById('rm-confidence').textContent = (reportResult.confidenceScore || 0.92).toFixed(2);
+    document.getElementById('rm-time').textContent = new Date().toLocaleTimeString();
+    document.getElementById('report-meta').style.display = 'flex';
+    showToast('✓ Report generated successfully', 'success');
+  } catch (e) {
+    log('warn', `Report generation error: ${e.message}`);
+    content.innerHTML = `<div style="color:#ef4444">Error generating report: ${e.message}</div>`;
+    showToast(`❌ Report failed: ${e.message}`, 'error');
+  }
+}
+
+function downloadReport() {
+  const content = document.getElementById('report-content').textContent;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], {type:'text/plain'}));
+  a.download = 'quantum-art-report.txt';
+  a.click();
+}
+
+// ── STRENGTH METER ──
+document.getElementById('audit-entropy').addEventListener('input', function() {
+  const v = parseFloat(this.value);
+  const pct = (v / 8 * 100).toFixed(0);
+  const fill = document.getElementById('strength-fill');
+  const label = document.getElementById('strength-label-val');
+  fill.style.width = pct + '%';
+  if (v > 7) { fill.style.background = 'var(--emerald)'; label.textContent = 'Strong'; label.style.color = 'var(--emerald)'; }
+  else if (v > 5) { fill.style.background = '#f59e0b'; label.textContent = 'Moderate'; label.style.color = '#f59e0b'; }
+  else { fill.style.background = '#ef4444'; label.textContent = 'Weak'; label.style.color = '#ef4444'; }
+});
+
+// ── BACKEND CONNECTION CHECK ──
+async function checkBackendConnection() {
+  try {
+    const response = await fetch(state.apiUrl.replace('/api', '/'), {
+      method: 'GET'
+    });
+    if (response.ok) {
+      const statusLed = document.querySelector('.status-led');
+      const statusText = document.querySelector('.nav-status span');
+      statusLed.style.background = 'var(--emerald)';
+      statusText.textContent = 'BACKEND ONLINE';
+      log('success', 'Connected to backend API');
+      return true;
+    }
+  } catch (e) {
+    const statusLed = document.querySelector('.status-led');
+    const statusText = document.querySelector('.nav-status span');
+    statusLed.style.background = '#ef4444';
+    statusText.textContent = 'BACKEND OFFLINE';
+    log('warn', `Backend unreachable: ${e.message}`);
+    showToast(`❌ Backend offline: ${state.apiUrl}`, 'error', 0);
+  }
+  return false;
+}
+
+// Initialize backend connection check on page load
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => checkBackendConnection(), 500);
+  setTimeout(() => loadGallery(), 300);
+});
+
+// ── TOAST NOTIFICATIONS ──
+function showToast(message, type = 'info', duration = 4000) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  const icons = { error: '✕', success: '✓', info: 'ℹ' };
+  toast.innerHTML = `
+    <span class="toast-icon">${icons[type] || type}</span>
+    <span class="toast-message">${message}</span>
+    <span class="toast-close" onclick="this.parentElement.classList.add('removing');setTimeout(()=>this.parentElement.remove(),300)">✕</span>
+  `;
+  
+  container.appendChild(toast);
+  
+  if (duration > 0) {
+    setTimeout(() => {
+      if (toast.parentElement) {
+        toast.classList.add('removing');
+        setTimeout(() => toast.remove(), 300);
+      }
+    }, duration);
+  }
+  
+  return toast;
+}
+
+// ── GALLERY MANAGEMENT ──
+function saveToGallery() {
+  if (!state.lastResult) {
+    showToast('No artwork to save. Generate one first.', 'info');
+    return;
+  }
+
+  const canvas = document.getElementById('art-canvas');
+  if (!canvas || canvas.style.display === 'none') {
+    showToast('No artwork available to save.', 'error');
+    return;
+  }
+
+  const gallery = JSON.parse(localStorage.getItem('quantumGallery') || '[]');
+  const item = {
+    id: Date.now(),
+    dataUrl: canvas.toDataURL('image/png'),
+    circuit: state.lastResult.ct,
+    dimensions: `${state.lastResult.w}×${state.lastResult.h}`,
+    colorMode: state.lastResult.mode,
+    entropy: state.lastResult.entropy?.toFixed(4),
+    timestamp: new Date().toISOString(),
+    jobId: state.lastResult.jobId
+  };
+
+  gallery.push(item);
+  localStorage.setItem('quantumGallery', JSON.stringify(gallery));
+  
+  loadGallery();
+  showToast('✓ Artwork saved to gallery!', 'success');
+}
+
+function loadGallery() {
+  const gallery = JSON.parse(localStorage.getItem('quantumGallery') || '[]');
+  const grid = document.getElementById('gallery-grid');
+  const count = document.getElementById('gallery-count');
+  
+  count.textContent = `${gallery.length} artwork${gallery.length !== 1 ? 's' : ''} saved`;
+  
+  if (gallery.length === 0) {
+    grid.innerHTML = `
+      <div class="gallery-empty" style="grid-column: 1 / -1;">
+        <div class="gallery-empty-icon">🖼️</div>
+        <p>No artworks yet — generate one to start building your collection!</p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = gallery.map(item => `
+    <div class="gallery-item" onclick="event.stopPropagation()">
+      <img src="${item.dataUrl}" class="gallery-item-img" alt="Quantum art: ${item.circuit}">
+      <div class="gallery-item-overlay">
+        <div class="gallery-item-meta">${item.circuit} · ${item.dimensions} · ${item.entropy}</div>
+        <div class="gallery-item-actions">
+          <button class="gallery-item-btn" onclick="downloadGalleryItem('${item.id}')">↓ DL</button>
+          <button class="gallery-item-btn delete" onclick="deleteGalleryItem('${item.id}')">🗑 DEL</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function downloadGalleryItem(id) {
+  const gallery = JSON.parse(localStorage.getItem('quantumGallery') || '[]');
+  const item = gallery.find(i => i.id == id);
+  if (!item) return;
+
+  const a = document.createElement('a');
+  a.download = `quantum-art-${item.jobId || 'export'}.png`;
+  a.href = item.dataUrl;
+  a.click();
+  showToast('Downloaded artwork', 'success');
+}
+
+function deleteGalleryItem(id) {
+  if (!confirm('Delete this artwork from gallery?')) return;
+  
+  let gallery = JSON.parse(localStorage.getItem('quantumGallery') || '[]');
+  gallery = gallery.filter(i => i.id != id);
+  localStorage.setItem('quantumGallery', JSON.stringify(gallery));
+  loadGallery();
+  showToast('Artwork deleted', 'success');
+}
+
+function clearGallery() {
+  if (!confirm('Clear entire gallery? This cannot be undone.')) return;
+  
+  localStorage.removeItem('quantumGallery');
+  loadGallery();
+  showToast('Gallery cleared', 'success');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+2026-06-01 15:43:24,436 | INFO | quantum_rng | QuantumRNG initialised (prefer_hardware=False)
+2026-06-01 15:43:24,444 | INFO | quantum_rng | Generated 256 bits | circuit=hadamard | backend=aer_simulator | job_id=SIM-66ec54fa48e2 | entropy=1.0000 | bias=0.4961
+2026-06-01 15:43:24,451 | INFO | quantum_rng | QuantumRNG initialised (prefer_hardware=False)
+2026-06-01 15:43:24,458 | INFO | quantum_rng | Generated 100 bits | circuit=hadamard | backend=aer_simulator | job_id=SIM-370d5627a344 | entropy=1.0000 | bias=0.5000
+2026-06-01 15:43:24,464 | INFO | quantum_rng | QuantumRNG initialised (prefer_hardware=False)
+2026-06-01 15:43:24,473 | INFO | quantum_rng | Generated 64 bits | circuit=hadamard | backend=aer_simulator | job_id=SIM-201ee2b6ed45 | entropy=0.9993 | bias=0.5156
+2026-06-01 15:43:24,485 | INFO | quantum_rng | QuantumRNG initialised (prefer_hardware=False)
+2026-06-01 15:43:24,491 | INFO | quantum_rng | Generated 256 bits | circuit=hadamard | backend=aer_simulator | job_id=SIM-5cdb17ff8b5b | entropy=0.9840 | bias=0.5742
+2026-06-01 15:43:24,494 | INFO | quantum_rng | QuantumRNG initialised (prefer_hardware=False)
+2026-06-01 15:43:24,499 | INFO | quantum_rng | Generated 64 bits | circuit=hadamard | backend=aer_simulator | job_id=SIM-7ee6046e2f55 | entropy=0.9993 | bias=0.5156
+2026-06-01 15:43:24,501 | INFO | quantum_rng | QuantumRNG initialised (prefer_hardware=False)
+2026-06-01 15:43:24,506 | INFO | quantum_rng | Generated 64 bits | circuit=bell | backend=aer_simulator | job_id=SIM-dbbcc02cd68d | entropy=0.9993 | bias=0.5156
+2026-06-01 15:43:24,508 | INFO | quantum_rng | QuantumRNG initialised (prefer_hardware=False)
+2026-06-01 15:43:24,514 | INFO | quantum_rng | Generated 64 bits | circuit=ghz | backend=aer_simulator | job_id=SIM-e6fcb4d19e34 | entropy=0.9993 | bias=0.5156
+2026-06-01 15:43:24,531 | INFO | quantum_rng | QuantumRNG initialised (prefer_hardware=False)
+2026-06-01 15:43:24,532 | INFO | quantum_rng | Generated 64 bits | circuit=hardware_noise | backend=aer_simulator | job_id=SIM-c826787d8b90 | entropy=0.9993 | bias=0.5156
+2026-06-01 15:43:24,532 | INFO | quantum_rng | QuantumRNG initialised (prefer_hardware=False)
+2026-06-01 15:43:24,538 | INFO | quantum_rng | Generated 64 bits | circuit=parameterized | backend=aer_simulator | job_id=SIM-4ba0899f28a7 | entropy=0.9993 | bias=0.5156
